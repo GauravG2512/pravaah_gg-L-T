@@ -1,0 +1,203 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Pravaah</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+    <!-- Custom Glassmorphism Stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100vw;
+            padding: 30px 20px;
+        }
+        .register-card {
+            width: 100%;
+            max-width: 680px;
+            padding: 40px 30px;
+            animation: cardFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .brand-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 10px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 1.4rem;
+            font-family: var(--font-heading);
+            box-shadow: 0 4px 20px var(--accent-primary-glow);
+        }
+        .brand-title {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .brand-subtitle {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            margin-left: 2px;
+        }
+        .form-help {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            margin-left: 2px;
+        }
+        .form-help ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Ambient glowing backgrounds behind the glass card -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <!-- Theme switch button float -->
+    <div style="position: absolute; top: 24px; right: 24px;">
+        <button id="theme-toggle" class="theme-toggle-btn" title="Switch Theme">
+            <i class="fas fa-sun"></i>
+        </button>
+    </div>
+
+    <!-- Centered Registration Glass Card -->
+    <div class="register-card glass-panel">
+        <div class="brand-header">
+            <div class="brand-logo">P</div>
+            <h1 class="brand-title">Create Account</h1>
+            <p class="brand-subtitle">Join the Pravaah Management Suite</p>
+        </div>
+
+        <form method="POST" novalidate>
+            {% csrf_token %}
+            
+            <div class="row">
+                <!-- Username -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
+                    {{ form.username }}
+                    {% if form.username.help_text %}
+                        <div class="form-help">{{ form.username.help_text|safe }}</div>
+                    {% endif %}
+                </div>
+                
+                <!-- Contact Number -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="{{ form.contact.id_for_label }}">Contact Number</label>
+                    {{ form.contact }}
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- First Name -->
+                <div class="col-md-4 mb-3">
+                    <label class="form-label" for="{{ form.first_name.id_for_label }}">First Name</label>
+                    {{ form.first_name }}
+                </div>
+                
+                <!-- Middle Name -->
+                <div class="col-md-4 mb-3">
+                    <label class="form-label" for="{{ form.middle_name.id_for_label }}">Middle Name</label>
+                    {{ form.middle_name }}
+                </div>
+
+                <!-- Last Name -->
+                <div class="col-md-4 mb-3">
+                    <label class="form-label" for="{{ form.last_name.id_for_label }}">Last Name</label>
+                    {{ form.last_name }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <!-- Email Address -->
+                <label class="form-label" for="{{ form.email.id_for_label }}">Email Address</label>
+                {{ form.email }}
+            </div>
+
+            <!-- Password Fields (Rendered with custom styling classes by subclassing form fields) -->
+            {% for field in form %}
+                {% if "password" in field.name %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <input type="password" name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="glass-input w-100" placeholder="{{ field.label }}">
+                        {% if field.help_text %}
+                            <div class="form-help">{{ field.help_text|safe }}</div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <button type="submit" class="btn-glass w-100 py-2.5 justify-content-center mt-3" style="font-size: 1rem;">
+                <i class="fas fa-user-plus"></i> Complete Sign Up
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <p class="text-secondary mb-0" style="font-size: 0.88rem;">
+                Already have an account? 
+                <a href="{% url 'accounts:login' %}" class="text-decoration-none fw-600" style="color: var(--accent-primary);">Sign In here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Toasts for warnings/messages -->
+    <div class="toast-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="glass-toast glass-panel toast-{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'info' %}info{% else %}success{% endif %}">
+                    <div class="toast-icon">
+                        <i class="fas {% if message.tags == 'error' %}fa-times-circle{% elif message.tags == 'warning' %}fa-exclamation-circle{% elif message.tags == 'info' %}fa-info-circle{% else %}fa-check-circle{% endif %}"></i>
+                    </div>
+                    <div class="toast-content">{{ message }}</div>
+                    <button class="toast-close"><i class="fas fa-times"></i></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap and custom JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsnCYO7NZF839j7yhmF899yZGLRlNEQN5rCr380hPDdt5cd9knO1O735LodcFL" crossorigin="anonymous"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
